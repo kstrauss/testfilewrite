@@ -17,6 +17,7 @@
 */
 
 using System.Diagnostics;
+using System.IO;
 
 namespace CloudTesting
 {
@@ -42,19 +43,21 @@ namespace CloudTesting
         /// will write the data in the pattern specified in the constructor, and will return
         /// with the number of writes done during the period
         /// </summary>
+        /// <returns>number of writes completed</returns>
         public long Run()
         {
             using (var stream = File.CreateText(_path))
             {
-                var finishT = DateTime.Now.AddSeconds(_durationSeconds);
                 long writeCalls = 0;
+                var finishT = DateTime.Now.AddSeconds(_durationSeconds);                
                 while (DateTime.Now < finishT)
                 {
                     stream.Write(_writeData);
                     writeCalls++;
                     if (_flushBetweenWrites)
                         stream.Flush();
-                    Task.Delay(_delayBetweenWrites).Wait();
+                    if (_delayBetweenWrites >0)
+                        Task.Delay(_delayBetweenWrites).Wait();
                 }
                 return writeCalls;
             }

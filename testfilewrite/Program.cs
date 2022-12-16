@@ -1,5 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-/*
+﻿/*
  * A quick utility for testing the impact of many small writes over potentially a filesystem that has a
  * large latency.
  * For testing environment for MGTriton where we see poor write performance in azure. Using Procmon we see
@@ -13,8 +12,6 @@
  * on the local drive we see a 8.2x difference
 */
 
-using System.IO;
-
 Console.WriteLine("TestFileWriter");
 
 if (args.Length >= 4)
@@ -26,7 +23,7 @@ if (args.Length >= 4)
         delayBetweenWrites: int.Parse(args[3]),
         flushBetweenWrites: args.Length >= 5 ? bool.Parse(args[4]) : false);
     var r = obj.Run();
-    Console.WriteLine($"Did {r}");
+    Console.WriteLine($"Did {r} writes");
 }
 else
 {
