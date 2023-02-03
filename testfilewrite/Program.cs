@@ -12,7 +12,14 @@
  * on the local drive we see a 8.2x difference
 */
 
+using System.CommandLine;
+
 Console.WriteLine("TestFileWriter");
+var pathOption = new Option<string?>(name: "path", "path will file will be written");
+var durationOption = new Option<int>(name: "duration", "seconds to execute for");
+var bytesLengthOption = new Option<int>(name: "bytesCount", "number of bytes to write on each write");
+var delayMSDelay = new Option<double>(name: "MSdelay", description: "number of MS to delay b/t writes", getDefaultValue: () => 0.0);
+var flushOption = new Option<bool>(name: "flush", description: "whether to flush after each write", getDefaultValue: ()=>false);
 
 if (args.Length >= 4)
 {
@@ -23,11 +30,12 @@ if (args.Length >= 4)
         delayBetweenWrites: int.Parse(args[3]),
         flushBetweenWrites: args.Length >= 5 ? bool.Parse(args[4]) : false);
     var r = obj.Run();
-    Console.WriteLine($"Did {r} writes");
+    var timePerWrite = r / int.Parse(args[1]);
+    Console.WriteLine($"Did {r} writes, which equates to {timePerWrite} writes/second");  
+    
 }
 else
 {
     Console.Error.WriteLine("no args");
     Console.Error.WriteLine("Args should be: path secondsToRun bytesPerWrite delayinMilliseconds [Flush true|force]");
 }
-
